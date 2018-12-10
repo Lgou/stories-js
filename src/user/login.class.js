@@ -6,8 +6,14 @@ class Login {
         //Modifier le titre de la page
         $('#main-title').html('Identifiez-vous');
 
+
+        //Définition des attributs login et password
+        this.login = $('[name="loginField"]');
+        this.password = $('[name="passwordField"]');
+
         // Définition du listener sur le formulaire
         this.formListener();
+        this.submitListener();
 
     }
 
@@ -19,6 +25,8 @@ class Login {
      * @return void
      */
     formListener() {
+        let login = this.login;
+        let password = this.password;
         $('#loginForm').on(
             'keyup',
             // callback : fonction appelée si l'évènement défini survient
@@ -41,8 +49,37 @@ class Login {
 
             }
         );
+    }
 
 
+ submitListener() {
+    $('#loginForm').on(
+        'submit',
+        function(event) {
+            event.preventDefault(); // Empêche l'action par défault...
+
+            //Instancie un nouvel utilisateur
+            const user = new User ();
+
+            //Définit le login et le password de l'utilisateur
+
+            user.setUsername(login.val());
+            user.setPassword(password.val());
+
+            // Gère l'authentification...
+
+            if (user.authenticate() === true) {
+                console.log('Oki, tu peux y aller');
+            } else {
+                console.log('ko, tu ne peux pas !');
+                login.val('');
+                password.val('');
+                $('#btnLogin').attr('disabled', 'disabled');
+            }
+        }
+
+
+        )
     }
 }
 
