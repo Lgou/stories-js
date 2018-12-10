@@ -53,6 +53,8 @@ class Login {
 
 
  submitListener() {
+     let login = this.login;
+     let password = this.password;
     $('#loginForm').on(
         'submit',
         function(event) {
@@ -75,6 +77,10 @@ class Login {
                 login.val('');
                 password.val('');
                 $('#btnLogin').attr('disabled', 'disabled');
+
+                // On peut instancier un toast
+                const toast = new Toast();
+                toast.toastIt();
             }
         }
 
