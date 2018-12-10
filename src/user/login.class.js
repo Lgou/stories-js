@@ -28,7 +28,9 @@ class Login {
                 const password = $('[name=passwordField]');
 
                 // Est-ce que les deux champs sont remplis
-                if (login.val() !== '' && password.val() !== '') {
+                if ( 
+                    password.val() !== '' && 
+                    login.val().length >=5 ) {
                     // on peut activer le bouton connexion
                     $('#btnLogin').removeAttr('disabled');
                 
