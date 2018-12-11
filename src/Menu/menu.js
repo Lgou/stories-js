@@ -42,23 +42,23 @@ export class Menu {
         const userMenu = $('#userMenu');
         userMenu.html(this.user.userName);
 
-    // On définit les options du menu
-    const dropdownBlock = $('#userMenuOptions');
+        // On définit les options du menu
+        const dropdownBlock = $('#userMenuOptions');
 
-    //Virer les options existantes
-    dropdownBlock.empty();
+        //Virer les options existantes
+        dropdownBlock.empty();
 
-    // Recharge les options à partir de la définition
-    const userMenuOptions = this.options[3].options;
-    for(const options of userMenuOptions) {
-        const item = this._makeOption(option);
-        item.appendTo(dropdownBlock);
+        // Recharge les options à partir de la définition
+        const userMenuOptions = this.options[3].options;
+        for (const options of userMenuOptions) {
+            const item = this._makeOption(option);
+            item.appendTo(dropdownBlock);
+        }
+
+        // En fin de parcours, on affiche le menu
+        dropdownBlock.removeClass('hidden');
     }
 
-    // En fin de parcours, on affiche le menu
-    dropdownBlock.removeClass('hidden');
-    }
-    
     _makeOption(option) {
         let item = null;
     }
