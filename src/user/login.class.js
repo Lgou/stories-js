@@ -1,4 +1,8 @@
-class Login {
+import { User } from './user.class';
+import { Menu } from './../Menu/menu';
+import { Toast } from './../modules/toaster/toast.class';
+
+export class Login {
     constructor() {
         //Modifier le titre du document HTML
         $(document).attr('title', 'Identification');
@@ -72,6 +76,10 @@ class Login {
 
             if (user.authenticate() === true) {
                 console.log('Oki, tu peux y aller');
+                const Menu = new Menu ();
+                
+                        
+
             } else {
                 console.log('ko, tu ne peux pas !');
                 login.val('');
