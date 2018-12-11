@@ -23,10 +23,6 @@ class Toast {
             this.message = params.message;
         }}
             
-        
-    
-
-
     setBackground(cssClass) {
         this.backgroundClass = cssClass;
     }
@@ -52,7 +48,7 @@ class Toast {
         // Affiche pendant un certain temps
         setTimeout(
             function() {
-                // Ici, quand on arrive au bout de l'intervalle de temps
+                // Ici, quand on arrive au bout de l'intervalle de temps on enlève le toaster
                 toaster.remove();
             },
             this.duration * 1000
