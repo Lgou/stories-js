@@ -72,6 +72,10 @@ class Login {
 
             if (user.authenticate() === true) {
                 console.log('Oki, tu peux y aller');
+                const Menu = new Menu ();
+                
+                        
+
             } else {
                 console.log('ko, tu ne peux pas !');
                 login.val('');
