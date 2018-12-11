@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-class Toast {
+export class Toast {
     constructor(params) {
         if (!params.hasOwnProperty('background')) {
         // Paramètre de définition de la couleur de fond de toast
