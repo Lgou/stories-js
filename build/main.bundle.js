@@ -100,20 +100,29 @@ var _login = __webpack_require__(/*! ./../../src/user/login.class */ "./src/user
 
 var _loginController = __webpack_require__(/*! ./../../src/user/login/loginController.class */ "./src/user/login/loginController.class.js");
 
+var _storiesController = __webpack_require__(/*! ../../src/stories/storiesController.class */ "./src/stories/storiesController.class.js");
+
+var _userService = __webpack_require__(/*! ./../../src/services/user-service.class */ "./src/services/user-service.class.js");
+
+// @version 1.0.1 Passage par contrôleur
 /**
  * @name main.js
  * @desc Point d'entrée principal dans l'application javascript
  */
 
-var title = document.getElementById('main-title');
-title.innerHTML = 'Hello Javascript';
+var authGuard = new _userService.UserService();
+if (!authGuard.hasUser()) {
 
-// Créer une instance de la classe Login : le mot clé new permet de créer une instance à partir de la classe login
-var login = new _login.Login();
+  var controller = new _loginController.LoginController();
+  controller.getView();
 
-// @version 1.0.1 Passage par contrôleur
-var controller = new _loginController.LoginController();
-controller.getView();
+  // Créer une instance de la classe Login : le mot clé new permet de créer une instance à partir de la classe login
+  var login = new _login.Login();
+} else {
+  // @version 1.0.1 Passage par contrôleur
+  var _controller = new _storiesController.StoriesController();
+  _controller.getView();
+}
 
 /***/ }),
 
@@ -365,6 +374,118 @@ var Toast = exports.Toast = function () {
 
 /***/ }),
 
+/***/ "./src/services/user-service.class.js":
+/*!********************************************!*\
+  !*** ./src/services/user-service.class.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * @name UserService
+ * @desc Service de gestion de la persistence de l'utilisateur
+ * @author Aélion
+ * @version 1.0.0
+ */
+
+var UserService = exports.UserService = function () {
+    function UserService() {
+        _classCallCheck(this, UserService);
+    }
+
+    /**
+     * Lit localStorage pour récupérer un éventuel  utilisateur
+     * @return boolean
+     * 
+     */
+
+
+    _createClass(UserService, [{
+        key: 'hasUser',
+        value: function hasUser() {
+            var user = JSON.parse(localStorage.getItem('storiesUser'));
+            if (user) {
+                return true;
+            }
+            return false;
+        }
+    }]);
+
+    return UserService;
+}();
+
+/***/ }),
+
+/***/ "./src/stories/storiesController.class.js":
+/*!************************************************!*\
+  !*** ./src/stories/storiesController.class.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * @name Stories Controller
+ * @desc Controleur pour l'affichage des stories
+ * @author Aélion
+ * @version 1.0.0
+ */
+
+var StoriesController = exports.StoriesController = function () {
+    function StoriesController() {
+        _classCallCheck(this, StoriesController);
+
+        // Définit la vue pour ce contrôleur
+        this.view = './src/stories/views/stories.views.html';
+    }
+
+    /**
+     * Méthode pour récupérer la vue à afficher
+     */
+
+    _createClass(StoriesController, [{
+        key: 'getView',
+        value: function getView() {
+            //Récupère le placeholder de mon application
+            var app = $('[app2]');
+
+            $.get(this.view, function (viewContent) {
+                app.empty(); //Vide le contenu le cas échéant
+                app.html(viewContent);
+            });
+        }
+
+        // $get permet de lire le contenu de this.view et après ça le réinjecte dans la variable viewContent
+
+
+    }]);
+
+    return StoriesController;
+}();
+
+/***/ }),
+
 /***/ "./src/user/login.class.js":
 /*!*********************************!*\
   !*** ./src/user/login.class.js ***!
@@ -387,6 +508,8 @@ var _user = __webpack_require__(/*! ./user.class */ "./src/user/user.class.js");
 var _menu = __webpack_require__(/*! ./../Menu/menu.class */ "./src/Menu/menu.class.js");
 
 var _toast = __webpack_require__(/*! ./../modules/toaster/toast.class */ "./src/modules/toaster/toast.class.js");
+
+var _storiesController = __webpack_require__(/*! ../stories/storiesController.class */ "./src/stories/storiesController.class.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -608,6 +731,12 @@ var User = exports.User = function () {
         value: function authenticate() {
             if (this.userName === 'lgourves' && this.password === 'lg') {
                 this.group = 'Administrateur';
+                // Ajout de l'utilisateur dans localStorage
+                var persistentUser = {
+                    userName: this.userName,
+                    group: this.group
+                };
+                localStorage.setItem('storiesUser', JSON.stringify(persistentUser));
                 return true;
             }
 

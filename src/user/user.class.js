@@ -29,6 +29,12 @@
          authenticate() {
              if (this.userName === 'lgourves' && this.password === 'lg' ) {
                  this.group = 'Administrateur';
+                 // Ajout de l'utilisateur dans localStorage
+                 const persistentUser = {
+                     userName: this.userName,
+                     group: this.group
+                 };
+                 localStorage.setItem('storiesUser', JSON.stringify(persistentUser));
                  return true;
              }
 

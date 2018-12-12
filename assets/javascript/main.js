@@ -5,15 +5,21 @@
 
 import { Login } from './../../src/user/login.class';
 import { LoginController } from './../../src/user/login/loginController.class';
+import { StoriesController } from '../../src/stories/storiesController.class';
+import { UserService } from './../../src/services/user-service.class'
 
-let title = document.getElementById('main-title');
-title.innerHTML = 'Hello Javascript';
-
-// Créer une instance de la classe Login : le mot clé new permet de créer une instance à partir de la classe login
-const login = new Login();
 
 // @version 1.0.1 Passage par contrôleur
+const authGuard = new UserService();
+if (!authGuard.hasUser()) {
+
 const controller = new LoginController();
 controller.getView();
 
-
+// Créer une instance de la classe Login : le mot clé new permet de créer une instance à partir de la classe login
+const login = new Login();
+} else {
+// @version 1.0.1 Passage par contrôleur
+const controller = new StoriesController();
+controller.getView();
+}

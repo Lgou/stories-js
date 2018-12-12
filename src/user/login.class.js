@@ -1,6 +1,8 @@
 import { User } from './user.class';
 import { Menu } from './../Menu/menu.class';
 import { Toast } from './../modules/toaster/toast.class';
+import { StoriesController } from '../stories/storiesController.class';
+
 
 export class Login {
     constructor() {
