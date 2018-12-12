@@ -110,10 +110,10 @@ var login = new _login.Login();
 
 /***/ }),
 
-/***/ "./src/Menu/menu.js":
-/*!**************************!*\
-  !*** ./src/Menu/menu.js ***!
-  \**************************/
+/***/ "./src/Menu/menu.class.js":
+/*!********************************!*\
+  !*** ./src/Menu/menu.class.js ***!
+  \********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -128,48 +128,46 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/** 
-* @name : Menu
-* @desc : gestion du menu utilisateur
-* @author : Aélion
-* @version : 1.0.0
-*/
-
+/**
+ * @name Menu
+ * @desc Gestion du menu utilisateur
+ * @author Aélion
+ * @version 1.0.0
+ */
 var Menu = exports.Menu = function () {
     function Menu() {
         _classCallCheck(this, Menu);
 
-        this.options = [{ title: 'Accueil', active: 'always' }, { title: 'Toutes les stories', active: 'isAdmin' }, { title: 'Mes stories', active: 'always' }, {
-            title: 'Mon compte', active: 'always', options: [{ title: 'Mes prépférences' }, { title: 'Changer de mot de passe' }, { title: true }, { title: 'Déconnexion' }]
-
-        }];
+        this.options = [{ title: 'Accueil', active: 'always' }, { title: 'Toutes les Stories', active: 'isAdmin' }, { title: 'Mes stories', active: 'always' }, { title: 'Mon compte', active: 'always', options: [{ title: 'Mes préférences' }, { title: 'Changer de mot de passe' }, { divider: true }, { title: 'Déconnexion' }] }];
     }
 
-    /** Définition de l'utilisateur connecté */
+    /**
+     * Définit l'utilisateur connecté
+     * @param {*} user 
+     */
+
 
     _createClass(Menu, [{
         key: 'setUser',
         value: function setUser(user) {
             this.user = user;
-            // Met à jour le menu utilisateur
+            // Met à jour le menu Utilisateur
             this._update();
 
             // Active ou pas les options
             this._activate();
         }
     }, {
-        key: '_uptdate',
-        value: function _uptdate() {
-
-            // Mise à jour de l'option du menu: (username)
-
+        key: '_update',
+        value: function _update() {
+            // Mise à jour de l'option du menu : (userName)
             var userMenu = $('#userMenu');
             userMenu.html(this.user.userName);
 
             // On définit les options du menu
             var dropdownBlock = $('#userMenuOptions');
 
-            //Virer les options existantes
+            // Virer les options existantes
             dropdownBlock.empty();
 
             // Recharge les options à partir de la définition
@@ -180,7 +178,7 @@ var Menu = exports.Menu = function () {
 
             try {
                 for (var _iterator = userMenuOptions[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var options = _step.value;
+                    var option = _step.value;
 
                     var item = this._makeOption(option);
                     item.appendTo(dropdownBlock);
@@ -208,6 +206,19 @@ var Menu = exports.Menu = function () {
         key: '_makeOption',
         value: function _makeOption(option) {
             var item = null;
+
+            if (option.hasOwnProperty('title')) {
+                // link logic here
+                item = $('<a>');
+                item.addClass('dropdown-item').attr('href', '#').html(option.title);
+                // <a class="dropdown-item" href="#">Action</a>
+            } else {
+                // divider logic here
+                // <div class="dropdown-divider"></div>
+                item = $('<div>');
+                item.addClass('dropdown-divider');
+            }
+            return item;
         }
     }, {
         key: '_activate',
@@ -218,9 +229,15 @@ var Menu = exports.Menu = function () {
 
             try {
                 for (var _iterator2 = this.options[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var _option = _step2.value;
+                    var option = _step2.value;
 
-                    var item = $('[title="' + _option.title + '"]');
+                    var item = $('[title="' + option.title + '"]');
+
+                    if (option.active === 'always') {
+                        item.removeClass('disabled');
+                    } else if (option.active === 'isAdmin' && this.user.group === 'Administrateur') {
+                        item.removeClass('disabled');
+                    }
                 }
             } catch (err) {
                 _didIteratorError2 = true;
@@ -344,7 +361,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _user = __webpack_require__(/*! ./user.class */ "./src/user/user.class.js");
 
-var _menu = __webpack_require__(/*! ./../Menu/menu */ "./src/Menu/menu.js");
+var _menu = __webpack_require__(/*! ./../Menu/menu.class */ "./src/Menu/menu.class.js");
 
 var _toast = __webpack_require__(/*! ./../modules/toaster/toast.class */ "./src/modules/toaster/toast.class.js");
 
@@ -419,7 +436,8 @@ var Login = exports.Login = function () {
 
                 if (user.authenticate() === true) {
                     console.log('Oki, tu peux y aller');
-                    var _Menu = new _Menu();
+                    var menu = new _menu.Menu();
+                    menu.setUser(user);
                 } else {
                     console.log('ko, tu ne peux pas !');
                     login.val('');
@@ -456,6 +474,10 @@ var Login = exports.Login = function () {
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -467,7 +489,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * @version 1.0.0
  */
 
-var User = function () {
+var User = exports.User = function () {
     function User() {
         _classCallCheck(this, User);
     }

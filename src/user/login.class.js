@@ -1,5 +1,5 @@
 import { User } from './user.class';
-import { Menu } from './../Menu/menu';
+import { Menu } from './../Menu/menu.class';
 import { Toast } from './../modules/toaster/toast.class';
 
 export class Login {
@@ -65,7 +65,7 @@ export class Login {
             event.preventDefault(); // Empêche l'action par défault...
 
             //Instancie un nouvel utilisateur
-            const user = new User ();
+            const user = new User();
 
             //Définit le login et le password de l'utilisateur
 
@@ -76,8 +76,8 @@ export class Login {
 
             if (user.authenticate() === true) {
                 console.log('Oki, tu peux y aller');
-                const Menu = new Menu ();
-                
+                const menu = new Menu();
+                menu.setUser(user);
                         
 
             } else {
