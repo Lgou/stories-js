@@ -98,7 +98,7 @@ export class Login {
                         {
                             message: 'Ce login ou ce mot de passe ne correspond à aucun utilisateur',
                             duration: 2,
-                            background: 'warning',
+                            background: 'danger',
                             width: 200,
                             height: 100
                         }

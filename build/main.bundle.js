@@ -300,6 +300,8 @@ var Toast = exports.Toast = function () {
         if (!params.hasOwnProperty('background')) {
             // Paramètre de définition de la couleur de fond de toast
             this.backgroundClass = 'danger';
+        } else {
+            this.backgroundClass = params.background;
         }
 
         if (!params.hasOwnProperty('duration')) {
@@ -311,14 +313,20 @@ var Toast = exports.Toast = function () {
 
         if (!params.hasOwnProperty('message')) {
             this.message = params.message;
+        } else {
+            this.message = params.message;
         }
 
         if (!params.hasOwnProperty('height')) {
             this.height = params.height + 'px';
+        } else {
+            this.height = params.height;
         }
 
         if (!params.hasOwnProperty('width')) {
             this.width = params.width + 'px';
+        } else {
+            this.width = params.width;
         }
     }
 
@@ -339,7 +347,7 @@ var Toast = exports.Toast = function () {
 
             // On lui ajoute des classes
             toaster.addClass('toast') // méthode jquery pour créer.css('width', this.width) une classe toast en mémoire
-            .addClass(this.backgroundClass).css('width', this.width).css('height', this.height).addClass('animated').addClass('fadeInDownBig').html('<p>' + this.message + '</p>');
+            .addClass(this.backgroundClass).css('width', this.width).css('height', this.height).html('<p>' + this.message + '</p>');
 
             // Ajoute le toaster au document lui-même (au body du doc html)
             toaster.appendTo($('body'));
@@ -468,7 +476,7 @@ var Login = exports.Login = function () {
                     var toast = new _toast.Toast({
                         message: 'Ce login ou ce mot de passe ne correspond à aucun utilisateur',
                         duration: 2,
-                        background: 'warning',
+                        background: 'danger',
                         width: 200,
                         height: 100
                     });
@@ -531,6 +539,10 @@ var LoginController = exports.LoginController = function () {
                 app.html(viewContent);
             });
         }
+
+        // $get permet de lire le contenu de this.view et après ça le réinjecte dans la variable viewContent
+
+
     }]);
 
     return LoginController;

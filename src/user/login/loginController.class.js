@@ -28,7 +28,7 @@ export class LoginController {
         );
     }
 
-
+// $get permet de lire le contenu de this.view et après ça le réinjecte dans la variable viewContent
 
 
 }
