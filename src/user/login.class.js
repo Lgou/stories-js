@@ -29,23 +29,25 @@ export class Login {
      * @return void
      */
     formListener() {
-        let login = this.login;
-        let password = this.password;
-        $('#loginForm').on(
+
+        const app = $('[app]');
+
+        app.on(
             'keyup',
+            '#loginForm', //Délégation d'évènement...
             // callback : fonction appelée si l'évènement défini survient
-            function(event) {
+            function (event) {
                 // Vérifier le contenu des champs
-                const login = $('[name=loginField]');
-                const password = $('[name=passwordField]');
+                let login = $('[name=loginField]');
+                let password = $('[name=passwordField]');
 
                 // Est-ce que les deux champs sont remplis
-                if ( 
-                    password.val() !== '' && 
-                    login.val().length >=5 ) {
+                if (
+                    password.val() !== '' &&
+                    login.val().length >= 5) {
                     // on peut activer le bouton connexion
                     $('#btnLogin').removeAttr('disabled');
-                
+
                 } else {
                     // Non, ça ne le fait pas tout seul, il faut lui dire
                     $('#btnLogin').attr('disabled', 'disabled');
@@ -56,58 +58,56 @@ export class Login {
     }
 
 
- submitListener() {
-     let login = this.login;
-     let password = this.password;
-    $('#loginForm').on(
-        'submit',
-        function(event) {
-            event.preventDefault(); // Empêche l'action par défault...
+    submitListener() {
+        const app = $('[app]');
+        app.on(
+            'submit',
+            '#loginForm',
+            function (event) {
 
-            //Instancie un nouvel utilisateur
-            const user = new User();
+                //Définition des attributs
+                let login = $ ('[name="loginField"]');
+                let password = $ ('[name="passwordField"]');
 
-            //Définit le login et le password de l'utilisateur
+                event.preventDefault(); // Empêche l'action par défault...
 
-            user.setUsername(login.val());
-            user.setPassword(password.val());
+                //Instancie un nouvel utilisateur
+                const user = new User();
 
-            // Gère l'authentification...
+                //Définit le login et le password de l'utilisateur
 
-            if (user.authenticate() === true) {
-                console.log('Oki, tu peux y aller');
-                const menu = new Menu();
-                menu.setUser(user);
-                        
+                user.setUsername(login.val());
+                user.setPassword(password.val());
 
-            } else {
-                console.log('ko, tu ne peux pas !');
-                login.val('');
-                password.val('');
-                $('#btnLogin').attr('disabled', 'disabled');
+                // Gère l'authentification...
 
-                // On peut instancier un toast
-                const toast = new Toast(
-                    {
-                        'message': 'Ce login ou ce mot de passe ne correspond à aucun utilisateur',
-                        'duration': 2,
-                        'background': 'warning',
-                        'width': 200,
-                        'height': 100
+                if (user.authenticate() === true) {
+                    console.log('Oki, tu peux y aller');
+                    const menu = new Menu();
+                    menu.setUser(user);
 
 
-                    }
+                } else {
+                    console.log('ko, tu ne peux pas !');
+                    login.val('');
+                    password.val('');
+                    $('#btnLogin').attr('disabled', 'disabled');
 
+                    // On peut instancier un toast
+                    const toast = new Toast(
+                        {
+                            message: 'Ce login ou ce mot de passe ne correspond à aucun utilisateur',
+                            duration: 2,
+                            background: 'warning',
+                            width: 200,
+                            height: 100
+                        }
 
-
-
-                )
-                toast.toastIt();
+                    );
+                    toast.toastIt();
+                }
             }
-        }
-
-
-        )
+        );
     }
 }
 

@@ -98,15 +98,22 @@
 
 var _login = __webpack_require__(/*! ./../../src/user/login.class */ "./src/user/login.class.js");
 
-var title = document.getElementById('main-title'); /**
-                                                    * @name main.js
-                                                    * @desc Point d'entrée principal dans l'application javascript
-                                                    */
+var _loginController = __webpack_require__(/*! ./../../src/user/login/loginController.class */ "./src/user/login/loginController.class.js");
 
+/**
+ * @name main.js
+ * @desc Point d'entrée principal dans l'application javascript
+ */
+
+var title = document.getElementById('main-title');
 title.innerHTML = 'Hello Javascript';
 
 // Créer une instance de la classe Login : le mot clé new permet de créer une instance à partir de la classe login
 var login = new _login.Login();
+
+// @version 1.0.1 Passage par contrôleur
+var controller = new _loginController.LoginController();
+controller.getView();
 
 /***/ }),
 
@@ -305,6 +312,14 @@ var Toast = exports.Toast = function () {
         if (!params.hasOwnProperty('message')) {
             this.message = params.message;
         }
+
+        if (!params.hasOwnProperty('height')) {
+            this.height = params.height + 'px';
+        }
+
+        if (!params.hasOwnProperty('width')) {
+            this.width = params.width + 'px';
+        }
     }
 
     _createClass(Toast, [{
@@ -323,8 +338,8 @@ var Toast = exports.Toast = function () {
             var toaster = $('<div>'); // je créé un nouvel élément en mémoire dans le DOM via le div (sans mettre la balise de fin)
 
             // On lui ajoute des classes
-            toaster.addClass('toast') // méthode jquery pour créer une classe toast en mémoire
-            .addClass(this.backgroundClass).addClass('animated').addClass('fadeInDownBig').html(this.message);
+            toaster.addClass('toast') // méthode jquery pour créer.css('width', this.width) une classe toast en mémoire
+            .addClass(this.backgroundClass).css('width', this.width).css('height', this.height).addClass('animated').addClass('fadeInDownBig').html('<p>' + this.message + '</p>');
 
             // Ajoute le toaster au document lui-même (au body du doc html)
             toaster.appendTo($('body'));
@@ -397,9 +412,10 @@ var Login = exports.Login = function () {
     _createClass(Login, [{
         key: 'formListener',
         value: function formListener() {
-            var login = this.login;
-            var password = this.password;
-            $('#loginForm').on('keyup',
+
+            var app = $('[app]');
+
+            app.on('keyup', '#loginForm', //Délégation d'évènement...
             // callback : fonction appelée si l'évènement défini survient
             function (event) {
                 // Vérifier le contenu des champs
@@ -419,9 +435,13 @@ var Login = exports.Login = function () {
     }, {
         key: 'submitListener',
         value: function submitListener() {
-            var login = this.login;
-            var password = this.password;
-            $('#loginForm').on('submit', function (event) {
+            var app = $('[app]');
+            app.on('submit', '#loginForm', function (event) {
+
+                //Définition des attributs
+                var login = $('[name="loginField"]');
+                var password = $('[name="passwordField"]');
+
                 event.preventDefault(); // Empêche l'action par défault...
 
                 //Instancie un nouvel utilisateur
@@ -446,12 +466,11 @@ var Login = exports.Login = function () {
 
                     // On peut instancier un toast
                     var toast = new _toast.Toast({
-                        'message': 'Ce login ou ce mot de passe ne correspond à aucun utilisateur',
-                        'duration': 2,
-                        'background': 'warning',
-                        'width': 200,
-                        'height': 100
-
+                        message: 'Ce login ou ce mot de passe ne correspond à aucun utilisateur',
+                        duration: 2,
+                        background: 'warning',
+                        width: 200,
+                        height: 100
                     });
                     toast.toastIt();
                 }
@@ -460,6 +479,61 @@ var Login = exports.Login = function () {
     }]);
 
     return Login;
+}();
+
+/***/ }),
+
+/***/ "./src/user/login/loginController.class.js":
+/*!*************************************************!*\
+  !*** ./src/user/login/loginController.class.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * @name Login Controller
+ * @desc Controleur pour la gestion du formulaire de login
+ * @author Aélion
+ * @version 1.0.0
+ */
+
+var LoginController = exports.LoginController = function () {
+    function LoginController() {
+        _classCallCheck(this, LoginController);
+
+        // Définit la vue pour ce contrôleur
+        this.view = './src/user/login/views/loginform.view.html';
+    }
+
+    /**
+     * Méthode pour récupérer la vue à afficher
+     */
+
+    _createClass(LoginController, [{
+        key: 'getView',
+        value: function getView() {
+            //Récupère le placeholder de mon application
+            var app = $('[app]');
+
+            $.get(this.view, function (viewContent) {
+                app.empty(); //Vide le contenu le cas échéant
+                app.html(viewContent);
+            });
+        }
+    }]);
+
+    return LoginController;
 }();
 
 /***/ }),
