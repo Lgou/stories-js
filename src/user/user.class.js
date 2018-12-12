@@ -5,8 +5,8 @@
  * @version 1.0.0
  */
 
- class User {
-     constructor () {}
+ export class User {
+     constructor() {}
          /**
           * Définit le username de l'utilisateur 
           * @param {*} username
