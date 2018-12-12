@@ -38,6 +38,8 @@ export class Toast {
         toaster
             .addClass('toast')    // méthode jquery pour créer une classe toast en mémoire
             .addClass(this.backgroundClass)
+            .addClass('animated')
+            .addClass('fadeInDownBig')
             
             .html(this.message);
 
@@ -48,7 +50,7 @@ export class Toast {
         // Affiche pendant un certain temps
         setTimeout(
             function() {
-                // Ici, quand on arrive au bout de l'intervalle de temps on enlève le toaster
+                // Ici, quand on arrive au bout de l'intervalle de temps on enlève le toaster --> setTimeout est une fonction prédéfinie de Javascript qui a 2 paramètres (une fonction qui se déclenche après une certain durée)
                 toaster.remove();
             },
             this.duration * 1000
